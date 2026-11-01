@@ -210,6 +210,24 @@
         font-size: 13px;
     }
 
+        .edit-button {
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--blue-light);
+    color: var(--blue);
+    cursor: pointer;
+}
+
+.task-edit-input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px;
+    border: 1px solid var(--blue);
+    border-radius: 6px;
+    font: inherit;
+}
+
     .delete-button:hover {
         background: #fef2f2;
         border-radius: 5px;
@@ -426,6 +444,46 @@ let currentFilter = "all";
             text.className = "task-text";
             text.textContent = task.text;
 
+        const editButton = document.createElement("button");
+editButton.className = "edit-button";
+editButton.type = "button";
+editButton.textContent = "Edit";
+editButton.setAttribute("aria-label", "Edit " + task.text);
+
+editButton.addEventListener("click", () => {
+    const editInput = document.createElement("input");
+    editInput.type = "text";
+    editInput.value = task.text;
+    editInput.className = "task-edit-input";
+    editInput.setAttribute("aria-label", "Edit task name");
+
+    text.replaceWith(editInput);
+    editButton.textContent = "Save";
+    editInput.focus();
+    editInput.select();
+
+    const saveEdit = () => {
+        const newText = editInput.value.trim();
+
+        if (!newText) {
+            editInput.focus();
+            return;
+        }
+
+        task.text = newText;
+        saveTasks();
+        renderTasks();
+    };
+
+    editButton.onclick = saveEdit;
+
+    editInput.addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+            saveEdit();
+        }
+    });
+});
+
             const deleteButton = document.createElement("button");
             deleteButton.className = "delete-button";
             deleteButton.type = "button";
@@ -441,7 +499,7 @@ let currentFilter = "all";
                 renderTasks();
             });
 
-            item.append(checkbox, text, deleteButton);
+            item.append(checkbox, text, editButton, deleteButton);
             taskList.appendChild(item);
         });
 
