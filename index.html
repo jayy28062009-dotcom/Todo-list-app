@@ -1,0 +1,424 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="description" content="A simple task manager built by Jay.">
+    <title>Jay's To-Do List</title><style>
+    :root {
+        --blue: #2563eb;
+        --blue-light: #eff6ff;
+        --text: #1e293b;
+        --muted: #64748b;
+        --border: #e2e8f0;
+        --white: #ffffff;
+        --red: #dc2626;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background: #f8fafc;
+        color: var(--text);
+        min-height: 100vh;
+        line-height: 1.6;
+    }
+
+    header {
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        padding: 18px 20px;
+    }
+
+    .header-content {
+        max-width: 650px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
+        color: var(--blue);
+        font-size: 21px;
+        font-weight: bold;
+    }
+
+    .badge {
+        background: var(--blue-light);
+        color: var(--blue);
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+    }
+
+    main {
+        max-width: 650px;
+        margin: 45px auto;
+        padding: 0 20px;
+    }
+
+    .intro {
+        margin-bottom: 25px;
+    }
+
+    .intro h1 {
+        font-size: 32px;
+        letter-spacing: -1px;
+        margin-bottom: 5px;
+    }
+
+    .intro p {
+        color: var(--muted);
+    }
+
+    .task-box {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 22px;
+        box-shadow: 0 5px 20px rgba(15, 23, 42, 0.03);
+    }
+
+    form {
+        display: flex;
+        gap: 10px;
+    }
+
+    input[type="text"] {
+        min-width: 0;
+        flex: 1;
+        padding: 13px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 15px;
+        outline: none;
+    }
+
+    input[type="text"]:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px var(--blue-light);
+    }
+
+    button {
+        font: inherit;
+        cursor: pointer;
+    }
+
+    .add-button {
+        background: var(--blue);
+        color: var(--white);
+        border: none;
+        border-radius: 8px;
+        padding: 12px 17px;
+        font-weight: bold;
+    }
+
+    .add-button:hover {
+        background: #1d4ed8;
+    }
+
+    .summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin: 25px 0 12px;
+    }
+
+    .summary h2 {
+        font-size: 17px;
+    }
+
+    #task-count {
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    .task-list {
+        list-style: none;
+    }
+
+    .task-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 12px;
+        border: 1px solid var(--border);
+        background: var(--white);
+        border-radius: 9px;
+        margin-bottom: 10px;
+        animation: appear 0.2s ease-out;
+    }
+
+    .task-item input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--blue);
+        flex-shrink: 0;
+    }
+
+    .task-text {
+        flex: 1;
+        overflow-wrap: anywhere;
+    }
+
+    .task-item.completed .task-text {
+        text-decoration: line-through;
+        color: var(--muted);
+    }
+
+    .delete-button {
+        background: transparent;
+        color: var(--red);
+        border: none;
+        padding: 6px;
+        font-size: 13px;
+    }
+
+    .delete-button:hover {
+        background: #fef2f2;
+        border-radius: 5px;
+    }
+
+    .empty {
+        text-align: center;
+        padding: 35px 10px;
+        color: var(--muted);
+    }
+
+    .empty span {
+        display: block;
+        font-size: 32px;
+        margin-bottom: 8px;
+    }
+
+    footer {
+        text-align: center;
+        padding: 25px 15px;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    @keyframes appear {
+        from {
+            opacity: 0;
+            transform: translateY(5px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 420px) {
+        main {
+            margin-top: 30px;
+        }
+
+        .intro h1 {
+            font-size: 28px;
+        }
+
+        .task-box {
+            padding: 15px;
+        }
+
+        form {
+            flex-direction: column;
+        }
+
+        .add-button {
+            width: 100%;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation: none !important;
+            scroll-behavior: auto !important;
+        }
+    }
+</style>
+
+</head><body>
+    <header>
+        <div class="header-content">
+            <div class="logo">Jay.Tasks</div>
+            <span class="badge">My Task Manager</span>
+        </div>
+    </header><main>
+    <div class="intro">
+        <h1>My To-Do List</h1>
+        <p>Small steps every day lead to big results.</p>
+    </div>
+
+    <div class="task-box">
+        <form id="task-form">
+            <input
+                id="task-input"
+                type="text"
+                maxlength="200"
+                placeholder="What do you need to do?"
+                aria-label="New task"
+                required
+            >
+            <button class="add-button" type="submit">
+                + Add Task
+            </button>
+        </form>
+
+        <div class="summary">
+            <h2>My Tasks</h2>
+            <span id="task-count">0 tasks remaining</span>
+        </div>
+
+        <ul id="task-list" class="task-list"></ul>
+
+        <div id="empty-state" class="empty">
+            <span>📝</span>
+            <p>No tasks yet. Add your first task above!</p>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>Built by Jay with HTML, CSS, and JavaScript.</p>
+</footer>
+
+<script>
+    const form = document.getElementById("task-form");
+    const input = document.getElementById("task-input");
+    const taskList = document.getElementById("task-list");
+    const taskCount = document.getElementById("task-count");
+    const emptyState = document.getElementById("empty-state");
+
+    let tasks = [];
+
+    try {
+        const savedTasks = localStorage.getItem("jay-todo-tasks");
+
+        if (savedTasks) {
+            const parsedTasks = JSON.parse(savedTasks);
+
+            if (Array.isArray(parsedTasks)) {
+                tasks = parsedTasks.filter(task =>
+                    task &&
+                    typeof task.id === "string" &&
+                    typeof task.text === "string" &&
+                    typeof task.completed === "boolean"
+                );
+            }
+        }
+    } catch (error) {
+        console.error("Could not load saved tasks:", error);
+    }
+
+    function saveTasks() {
+        try {
+            localStorage.setItem(
+                "jay-todo-tasks",
+                JSON.stringify(tasks)
+            );
+        } catch (error) {
+            console.error("Could not save tasks:", error);
+            alert("Your tasks could not be saved in this browser.");
+        }
+    }
+
+    function updateSummary() {
+        const remaining = tasks.filter(task => !task.completed).length;
+
+        taskCount.textContent =
+            remaining + (remaining === 1 ? " task remaining" : " tasks remaining");
+
+        emptyState.hidden = tasks.length > 0;
+    }
+
+    function renderTasks() {
+        taskList.replaceChildren();
+
+        tasks.forEach(task => {
+            const item = document.createElement("li");
+            item.className = "task-item";
+
+            if (task.completed) {
+                item.classList.add("completed");
+            }
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = task.completed;
+            checkbox.setAttribute(
+                "aria-label",
+                "Mark " + task.text + " as completed"
+            );
+
+            checkbox.addEventListener("change", () => {
+                task.completed = checkbox.checked;
+                saveTasks();
+                renderTasks();
+            });
+
+            const text = document.createElement("span");
+            text.className = "task-text";
+            text.textContent = task.text;
+
+            const deleteButton = document.createElement("button");
+            deleteButton.className = "delete-button";
+            deleteButton.type = "button";
+            deleteButton.textContent = "Delete";
+            deleteButton.setAttribute(
+                "aria-label",
+                "Delete " + task.text
+            );
+
+            deleteButton.addEventListener("click", () => {
+                tasks = tasks.filter(current => current.id !== task.id);
+                saveTasks();
+                renderTasks();
+            });
+
+            item.append(checkbox, text, deleteButton);
+            taskList.appendChild(item);
+        });
+
+        updateSummary();
+    }
+
+    form.addEventListener("submit", event => {
+        event.preventDefault();
+
+        const text = input.value.trim();
+
+        if (!text) {
+            input.focus();
+            return;
+        }
+
+        tasks.push({
+            id: crypto.randomUUID
+                ? crypto.randomUUID()
+                : Date.now().toString() + Math.random().toString(36).slice(2),
+            text: text,
+            completed: false
+        });
+
+        saveTasks();
+        renderTasks();
+
+        input.value = "";
+        input.focus();
+    });
+
+    renderTasks();
+</script>
+
+</body>
+  </html>
