@@ -140,6 +140,35 @@
         font-size: 13px;
     }
 
+    .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+        .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.filter-button {
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: white;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.filter-button.active {
+    background: var(--blue-light);
+    color: var(--blue);
+    border-color: var(--blue);
+    font-weight: bold;
+}
+        
     .task-list {
         list-style: none;
     }
@@ -275,11 +304,25 @@
         </form>
 
         <div class="summary">
-            <h2>My Tasks</h2>
-            <span id="task-count">0 tasks remaining</span>
-        </div>
+    <h2>My Tasks</h2>
+    <span id="task-count">0 tasks remaining</span>
+</div>
 
-        <ul id="task-list" class="task-list"></ul>
+<div class="filters" role="group" aria-label="Filter tasks">
+    <button class="filter-button active" data-filter="all">
+        All
+    </button>
+
+    <button class="filter-button" data-filter="active">
+        Active
+    </button>
+
+    <button class="filter-button" data-filter="completed">
+        Completed
+    </button>
+</div>
+
+<ul id="task-list" class="task-list"></ul>
 
         <div id="empty-state" class="empty">
             <span>📝</span>
@@ -300,6 +343,7 @@
     const emptyState = document.getElementById("empty-state");
 
     let tasks = [];
+let currentFilter = "all";
 
     try {
         const savedTasks = localStorage.getItem("jay-todo-tasks");
@@ -342,9 +386,21 @@
     }
 
     function renderTasks() {
-        taskList.replaceChildren();
+    taskList.replaceChildren();
 
-        tasks.forEach(task => {
+    const visibleTasks = tasks.filter(task => {
+        if (currentFilter === "active") {
+            return !task.completed;
+        }
+
+        if (currentFilter === "completed") {
+            return task.completed;
+        }
+
+        return true;
+    });
+
+    visibleTasks.forEach(task => {
             const item = document.createElement("li");
             item.className = "task-item";
 
@@ -416,6 +472,18 @@
         input.value = "";
         input.focus();
     });
+
+    document.querySelectorAll(".filter-button").forEach(button => {
+    button.addEventListener("click", () => {
+        currentFilter = button.dataset.filter;
+
+        document.querySelectorAll(".filter-button").forEach(item => {
+            item.classList.toggle("active", item === button);
+        });
+
+        renderTasks();
+    });
+});
 
     renderTasks();
 </script>
